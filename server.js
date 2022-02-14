@@ -5,9 +5,13 @@ const connectDB = require('./config/mongoDB');
 // Connect to DB
 connectDB();
 
-app.get('/', function (req, res) {
+app.get('/', (req, res) => {
   res.send('Hello World!');
 });
+
+// Init Middleware
+// bosyParser now is inclueded in express
+app.use(express.json({ extended: false }));
 
 // Define Routes
 app.use('/api/users', require('./routes/api/users'));
@@ -16,6 +20,6 @@ app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, function (req, res) {
+app.listen(PORT, (req, res) => {
   console.log(`Server is running on port ${PORT}`);
 });
