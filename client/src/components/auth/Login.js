@@ -1,7 +1,13 @@
-import React, { Fragment, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { Fragment, useState, useEffect } from 'react';
+import { Link, Redirect } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import { login } from '../../actions/userActions';
+import { useNavigate } from 'react-router-dom';
+import Alert from '../layout/Alert';
 
-function Login() {
+function Login({ login, isAuthenticated }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -13,17 +19,24 @@ function Login() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    console.log('SUCCESS!');
+    login({ email, password });
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [navigate, isAuthenticated]);
 
   return (
     <Fragment>
       <section className='container'>
+        <Alert />
         <h1 className='large text-primary'>Sign In</h1>
         <p className='lead'>
-          <i className='fas fa-user'></i> Sign intp Your Account
+          <i className='fas fa-user'></i> Sign into Your Account
         </p>
         <form className='form' onSubmit={submitHandler}>
           <div className='form-group'>
@@ -32,7 +45,7 @@ function Login() {
               placeholder='Email Address'
               name='email'
               value={email}
-              required
+              // required
               onChange={(e) => changeHandler(e)}
             />
           </div>
@@ -42,8 +55,8 @@ function Login() {
               placeholder='Password'
               name='password'
               value={password}
-              minLength='6'
               required
+              minLength='6'
               onChange={(e) => changeHandler(e)}
             />
           </div>
@@ -57,4 +70,13 @@ function Login() {
   );
 }
 
-export default Login;
+Login.prototype = {
+  login: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
+};
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.userAuth.isAuthenticated,
+});
+
+export default connect(mapStateToProps, { login })(Login);

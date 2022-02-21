@@ -1,11 +1,14 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setAlert } from '../../actions/alertActions';
+import { register } from '../../actions/userActions';
+import { useNavigate } from 'react-router-dom';
 import Alert from '../layout/Alert';
 
-function Register({ setAlert }) {
+function Register({ setAlert, register, isAuthenticated }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -19,14 +22,21 @@ function Register({ setAlert }) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       setAlert('Passwords do not match', 'danger');
     } else {
-      console.log(formData);
+      register({ name, email, password });
     }
   };
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [navigate, isAuthenticated]);
+
   return (
     <Fragment>
       <section className='container'>
@@ -42,7 +52,7 @@ function Register({ setAlert }) {
               placeholder='Name'
               name='name'
               value={name}
-              required
+              // required
               onChange={(e) => changeHandler(e)}
             />
           </div>
@@ -52,7 +62,7 @@ function Register({ setAlert }) {
               placeholder='Email Address'
               name='email'
               value={email}
-              required
+              // required
               onChange={(e) => changeHandler(e)}
             />
             <small className='form-text'>
@@ -67,7 +77,6 @@ function Register({ setAlert }) {
               name='password'
               value={password}
               minLength='6'
-              required
               onChange={(e) => changeHandler(e)}
             />
           </div>
@@ -78,7 +87,6 @@ function Register({ setAlert }) {
               name='confirmPassword'
               value={confirmPassword}
               minLength='6'
-              required
               onChange={(e) => changeHandler(e)}
             />
           </div>
@@ -96,10 +104,16 @@ function Register({ setAlert }) {
 // of properties passed to components
 Register.prototype = {
   setAlert: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  isAuthenticated: PropTypes.bool,
 };
+
+const mapStateToProps = (state) => ({
+  isAuthenticated: state.userAuth.isAuthenticated,
+});
 
 // connect() function connects a React component to a Redux store.
 // Inject setAlert without subscribing to the store
 // connect(null, { setAlert }) means we do not have mapStateToProps
 // we just need setAlert function
-export default connect(null, { setAlert })(Register);
+export default connect(mapStateToProps, { setAlert, register })(Register);

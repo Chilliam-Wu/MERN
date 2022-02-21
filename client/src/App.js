@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
@@ -9,10 +10,16 @@ import Navbar from './components/layout/Navbar';
 import Landing from './components/layout/Landing';
 import Register from './components/auth/Register';
 import Login from './components/auth/Login';
-
+import { loadUser } from './actions/userActions';
 import './App.css';
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadUser());
+  }, [dispatch]);
+
   return (
     <Router>
       <Fragment>
