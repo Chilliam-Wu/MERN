@@ -8,6 +8,11 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
+  USER_PROFILE_SUCCESS,
+  USER_PROFILE_FAIL,
+  USER_PROFILE_RESET,
+  CREATE_PROFILE_SUCCESS,
+  CREATE_PROFILE_FAIL,
 } from '../constants/userConstants';
 import { setToken } from '../utils/setToken';
 
@@ -48,6 +53,8 @@ export const loadUser = () => async (dispatch) => {
   try {
     const { data } = await axios.get('/api/auth');
     dispatch({ type: USER_LOAD_SUCCESS, payload: data });
+
+    localStorage.setItem('user', JSON.stringify(data));
   } catch (error) {
     dispatch({ type: USER_LOAD_FAIL });
   }
@@ -84,5 +91,64 @@ export const login =
   };
 
 export const logout = () => (dispatch) => {
+  dispatch({ type: USER_PROFILE_RESET });
   dispatch({ type: LOGOUT });
+};
+
+export const getUserProfile = () => async (dispatch) => {
+  try {
+    if (localStorage.token) {
+      setToken(localStorage.token);
+    }
+
+    const { data } = await axios.get('/api/profile/me');
+
+    dispatch({ type: USER_PROFILE_SUCCESS, payload: data });
+
+    localStorage.setItem('profile', JSON.stringify(data));
+  } catch (error) {
+    dispatch({
+      type: USER_PROFILE_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const createAndUpdateProfile = (formData) => async (dispatch) => {
+  try {
+    if (localStorage.token) {
+      setToken(localStorage.token);
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const newProfile = JSON.stringify(formData);
+
+    const { data } = await axios.post('/api/profile', newProfile, config);
+
+    dispatch({
+      type: CREATE_PROFILE_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: CREATE_PROFILE_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
 };

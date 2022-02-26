@@ -6,7 +6,7 @@ import { login } from '../../actions/userActions';
 import { useNavigate } from 'react-router-dom';
 import Alert from '../layout/Alert';
 
-function Login({ login, isAuthenticated }) {
+function Login({ login, userAuth: { user } }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -25,10 +25,10 @@ function Login({ login, isAuthenticated }) {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (user) {
       navigate('/dashboard');
     }
-  }, [navigate, isAuthenticated]);
+  }, [navigate, user]);
 
   return (
     <Fragment>
@@ -72,11 +72,11 @@ function Login({ login, isAuthenticated }) {
 
 Login.prototype = {
   login: PropTypes.func.isRequired,
-  isAuthenticated: PropTypes.bool,
+  userAuth: PropTypes.object.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  isAuthenticated: state.userAuth.isAuthenticated,
+  userAuth: state.userAuth,
 });
 
 export default connect(mapStateToProps, { login })(Login);

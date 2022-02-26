@@ -1,7 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 
-function Landing() {
+function Landing({ userAuth: { user } }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user) {
+      navigate('/dashboard');
+    }
+  }, [navigate, user]);
+
   return (
     <div>
       <section className='landing'>
@@ -27,4 +36,12 @@ function Landing() {
   );
 }
 
-export default Landing;
+Landing.prototype = {
+  userAuth: PropTypes.object.isRequired,
+};
+
+const mapStateToProps = (state) => ({
+  userAuth: state.userAuth,
+});
+
+export default connect(mapStateToProps)(Landing);

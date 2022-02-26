@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { logout } from '../../actions/userActions';
 
-function Navbar({ userAuth: { isAuthenticated, loading }, logout }) {
+function Navbar({ userAuth: { user, loading }, logout }) {
   return (
     <div>
       <nav className='navbar bg-dark'>
@@ -13,8 +13,13 @@ function Navbar({ userAuth: { isAuthenticated, loading }, logout }) {
             <i className='fas fa-code'></i> DevConnector
           </Link>
         </h1>
-        {!loading && isAuthenticated ? (
+        {!loading && user ? (
           <ul>
+            <li>
+              <Link to='/dashboard'>
+                <i className='fas fa-user'></i> Dashboard
+              </Link>
+            </li>
             <li>
               <Link to='/' onClick={logout}>
                 <i className='fas fa-sign-out-alt'></i> Logout
