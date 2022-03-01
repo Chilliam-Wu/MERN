@@ -1,16 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { createAndUpdateProfile } from '../../actions/userActions';
 import { Link, useNavigate } from 'react-router-dom';
 import Alert from '../layout/Alert';
+import { setAlert } from '../../actions/alertActions';
+import { CREATE_PROFILE_RESET } from '../../constants/userConstants';
 
 function EditProfile({
   userAuth: { user },
-  userProfile: { profile, success },
+  userProfile: { profile, create_success },
   createAndUpdateProfile,
+  setAlert,
 }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [socialLinksFlag, setSocialLinksFlag] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -44,6 +48,9 @@ function EditProfile({
   } = formData;
 
   useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
     if (profile) {
       setFormData({
         company: profile.company,
@@ -53,19 +60,41 @@ function EditProfile({
         skills: profile.skills,
         githubusername: profile.githubusername,
         bio: profile.bio,
-        twitter: profile.social.twitter,
-        facebook: profile.social.facebook,
-        linkedin: profile.social.linkedin,
-        youtube: profile.social.youtube,
-        instagram: profile.social.instagram,
+
+        twitter:
+          profile.hasOwnProperty('social') &&
+          profile.social.hasOwnProperty('twitter')
+            ? profile.social.twitter
+            : '',
+        facebook:
+          profile.hasOwnProperty('social') &&
+          profile.social.hasOwnProperty('facebook')
+            ? profile.social.facebook
+            : '',
+        linkedin:
+          profile.hasOwnProperty('social') &&
+          profile.social.hasOwnProperty('linkedin')
+            ? profile.social.linkedin
+            : '',
+        youtube:
+          profile.hasOwnProperty('social') &&
+          profile.social.hasOwnProperty('youtube')
+            ? profile.social.youtube
+            : '',
+        instagram:
+          profile.hasOwnProperty('social') &&
+          profile.social.hasOwnProperty('instagram')
+            ? profile.social.instagram
+            : '',
       });
     } else {
       navigate('/dashboard');
     }
-    if (success) {
-      navigate('/dashboard');
+    if (create_success) {
+      setAlert('Edit Profile Successfully!', 'success');
+      dispatch({ type: CREATE_PROFILE_RESET });
     }
-  }, [success, navigate]);
+  }, [create_success, navigate, profile, dispatch, setAlert, user]);
 
   const changeHandler = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -93,7 +122,9 @@ function EditProfile({
               value={status}
               onChange={(e) => changeHandler(e)}
             >
-              <option value='0'>* Select Professional Status</option>
+              <option value='0' disabled>
+                * Select Professional Status
+              </option>
               <option value='Developer'>Developer</option>
               <option value='Junior Developer'>Junior Developer</option>
               <option value='Senior Developer'>Senior Developer</option>
@@ -264,6 +295,7 @@ function EditProfile({
 
 EditProfile.prototype = {
   createAndUpdateProfile: PropTypes.func.isRequired,
+  setAlert: PropTypes.func.isRequired,
   userAuth: PropTypes.object.isRequired,
   userProfile: PropTypes.object.isRequired,
 };
@@ -275,4 +307,5 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   createAndUpdateProfile,
+  setAlert,
 })(EditProfile);

@@ -11,6 +11,17 @@ import {
   USER_PROFILE_RESET,
   CREATE_PROFILE_SUCCESS,
   CREATE_PROFILE_FAIL,
+  CREATE_PROFILE_RESET,
+  ADD_EXPERIENCE_SUCCESS,
+  ADD_EXPERIENCE_FAIL,
+  DELETE_EXPERIENCE_SUCCESS,
+  DELETE_EXPERIENCE_FAIL,
+  ADD_EDUCATION_SUCCESS,
+  ADD_EDUCATION_FAIL,
+  DELETE_EDUCATION_SUCCESS,
+  DELETE_EDUCATION_FAIL,
+  DELETE_ACCOUNT_SUCCESS,
+  DELETE_ACCOUNT_FAIL,
 } from '../constants/userConstants';
 
 const userAuthInitialState = {
@@ -105,11 +116,68 @@ export const userProfileReducer = (state = userProfleInitialState, action) => {
       return {
         ...state,
         loading: false,
-        success: true,
+        create_success: true,
         profile: action.payload,
       };
     case CREATE_PROFILE_FAIL:
       return { ...state, loading: false, error: action.payload };
+    case CREATE_PROFILE_RESET:
+      return {
+        ...state,
+        exp_success: false,
+        delete_success: false,
+        edu_success: false,
+        create_success: false,
+      };
+    case ADD_EXPERIENCE_SUCCESS:
+      return { ...state, profile: action.payload, exp_success: true };
+    case ADD_EXPERIENCE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case DELETE_EXPERIENCE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        profile: action.payload,
+        delete_success: true,
+      };
+    case DELETE_EXPERIENCE_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case ADD_EDUCATION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        profile: action.payload,
+        edu_success: true,
+      };
+    case ADD_EDUCATION_FAIL:
+      return { ...state, loading: false, error: action.payload };
+    case DELETE_EDUCATION_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        profile: action.payload,
+        delete_success: true,
+      };
+    case DELETE_EDUCATION_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case DELETE_ACCOUNT_SUCCESS:
+      return {
+        profile: null,
+        profiles: [],
+        repos: [],
+        loading: true,
+        error: {},
+      };
+    case DELETE_ACCOUNT_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
     default:
       return state;
   }

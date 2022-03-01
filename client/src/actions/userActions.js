@@ -13,6 +13,16 @@ import {
   USER_PROFILE_RESET,
   CREATE_PROFILE_SUCCESS,
   CREATE_PROFILE_FAIL,
+  ADD_EXPERIENCE_SUCCESS,
+  ADD_EXPERIENCE_FAIL,
+  DELETE_EXPERIENCE_SUCCESS,
+  DELETE_EXPERIENCE_FAIL,
+  ADD_EDUCATION_SUCCESS,
+  ADD_EDUCATION_FAIL,
+  DELETE_EDUCATION_SUCCESS,
+  DELETE_EDUCATION_FAIL,
+  DELETE_ACCOUNT_SUCCESS,
+  DELETE_ACCOUNT_FAIL,
 } from '../constants/userConstants';
 import { setToken } from '../utils/setToken';
 
@@ -145,6 +155,147 @@ export const createAndUpdateProfile = (formData) => async (dispatch) => {
 
     dispatch({
       type: CREATE_PROFILE_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const addExperience = (formData) => async (dispatch) => {
+  try {
+    if (localStorage.token) {
+      setToken(localStorage.token);
+    }
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const newExperience = JSON.stringify(formData);
+
+    const { data } = await axios.put(
+      '/api/profile/experience',
+      newExperience,
+      config
+    );
+
+    dispatch({ type: ADD_EXPERIENCE_SUCCESS, payload: data });
+  } catch (error) {
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')));
+    }
+
+    dispatch({
+      type: ADD_EXPERIENCE_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const deleteExperience = (experience_id) => async (dispatch) => {
+  try {
+    if (localStorage.token) {
+      setToken(localStorage.token);
+    }
+
+    const { data } = await axios.delete(
+      `/api/profile/experience/${experience_id}`
+    );
+
+    dispatch({ type: DELETE_EXPERIENCE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: DELETE_EXPERIENCE_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const addEducation = (formData) => async (dispatch) => {
+  try {
+    if (localStorage.token) {
+      setToken(localStorage.token);
+    }
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const newEducation = JSON.stringify(formData);
+
+    const { data } = await axios.put(
+      '/api/profile/education',
+      newEducation,
+      config
+    );
+
+    dispatch({ type: ADD_EDUCATION_SUCCESS, payload: data });
+  } catch (error) {
+    const errors = error.response.data.errors;
+    if (errors) {
+      errors.forEach((error) => {
+        dispatch(setAlert(error.msg, 'danger'));
+      });
+    }
+
+    dispatch({
+      type: ADD_EDUCATION_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const deleteEducation = (education_id) => async (dispatch) => {
+  try {
+    if (localStorage.token) {
+      setToken(localStorage.token);
+    }
+
+    const { data } = await axios.delete(
+      `/api/profile/education/${education_id}`
+    );
+
+    dispatch({ type: DELETE_EDUCATION_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: DELETE_EDUCATION_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const deleteAccount = () => async (dispatch) => {
+  try {
+    if (localStorage.token) {
+      setToken(localStorage.token);
+    }
+
+    const { data } = await axios.delete('/api/profile');
+
+    dispatch({ type: DELETE_ACCOUNT_SUCCESS });
+
+    dispatch(logout());
+  } catch (error) {
+    dispatch({
+      type: DELETE_ACCOUNT_FAIL,
       payload: {
         msg: error.response.statusText,
         status: error.response.status,
