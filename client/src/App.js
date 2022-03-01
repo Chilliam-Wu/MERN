@@ -10,6 +10,7 @@ import EditProfile from './components/dashboard/EditProfile';
 import AddExperience from './components/dashboard/AddExperience';
 import AddEducation from './components/dashboard/AddEducation';
 import CreateProfile from './components/layout/CreateProfile';
+import Profiles from './components/profiles/Profiles';
 import { loadUser } from './actions/userActions';
 import './App.css';
 
@@ -36,6 +37,7 @@ function App() {
             <Route path='edit-profile' element={<EditProfile />} />
             <Route path='add-experience' element={<AddExperience />} />
             <Route path='add-education' element={<AddEducation />} />
+            <Route path='profiles' element={<Profiles />} />
           </Routes>
         </section>
       </Fragment>

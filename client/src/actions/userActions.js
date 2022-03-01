@@ -23,6 +23,8 @@ import {
   DELETE_EDUCATION_FAIL,
   DELETE_ACCOUNT_SUCCESS,
   DELETE_ACCOUNT_FAIL,
+  ALL_PROFILES_SUCCESS,
+  ALL_PROFILES_FAIL,
 } from '../constants/userConstants';
 import { setToken } from '../utils/setToken';
 
@@ -283,19 +285,41 @@ export const deleteEducation = (education_id) => async (dispatch) => {
 };
 
 export const deleteAccount = () => async (dispatch) => {
-  try {
-    if (localStorage.token) {
-      setToken(localStorage.token);
+  if (
+    window.confirm(
+      'Are you sure to delete your account? This can NOT be undone!'
+    )
+  ) {
+    try {
+      if (localStorage.token) {
+        setToken(localStorage.token);
+      }
+
+      const { data } = await axios.delete('/api/profile');
+
+      dispatch({ type: DELETE_ACCOUNT_SUCCESS });
+
+      dispatch(logout());
+    } catch (error) {
+      dispatch({
+        type: DELETE_ACCOUNT_FAIL,
+        payload: {
+          msg: error.response.statusText,
+          status: error.response.status,
+        },
+      });
     }
+  }
+};
 
-    const { data } = await axios.delete('/api/profile');
+export const getAllProfiles = () => async (dispatch) => {
+  try {
+    const { data } = await axios.get('/api/profile');
 
-    dispatch({ type: DELETE_ACCOUNT_SUCCESS });
-
-    dispatch(logout());
+    dispatch({ type: ALL_PROFILES_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
-      type: DELETE_ACCOUNT_FAIL,
+      type: ALL_PROFILES_FAIL,
       payload: {
         msg: error.response.statusText,
         status: error.response.status,

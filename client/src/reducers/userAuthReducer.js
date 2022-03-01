@@ -22,6 +22,8 @@ import {
   DELETE_EDUCATION_FAIL,
   DELETE_ACCOUNT_SUCCESS,
   DELETE_ACCOUNT_FAIL,
+  ALL_PROFILES_SUCCESS,
+  ALL_PROFILES_FAIL,
 } from '../constants/userConstants';
 
 const userAuthInitialState = {
@@ -177,6 +179,18 @@ export const userProfileReducer = (state = userProfleInitialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case ALL_PROFILES_SUCCESS:
+      return {
+        ...state,
+        profiles: action.payload,
+        loading: false,
+      };
+    case ALL_PROFILES_FAIL:
+      return {
+        ...state,
+        error: action.payload,
+        loading: false,
       };
     default:
       return state;
