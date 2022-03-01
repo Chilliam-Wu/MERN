@@ -25,6 +25,8 @@ import {
   DELETE_ACCOUNT_FAIL,
   ALL_PROFILES_SUCCESS,
   ALL_PROFILES_FAIL,
+  SINGLE_PROFILE_SUCCESS,
+  SINGLE_PROFILE_FAIL,
 } from '../constants/userConstants';
 import { setToken } from '../utils/setToken';
 
@@ -295,7 +297,7 @@ export const deleteAccount = () => async (dispatch) => {
         setToken(localStorage.token);
       }
 
-      const { data } = await axios.delete('/api/profile');
+      await axios.delete('/api/profile');
 
       dispatch({ type: DELETE_ACCOUNT_SUCCESS });
 
@@ -320,6 +322,21 @@ export const getAllProfiles = () => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: ALL_PROFILES_FAIL,
+      payload: {
+        msg: error.response.statusText,
+        status: error.response.status,
+      },
+    });
+  }
+};
+
+export const getProfileById = (id) => async (dispatch) => {
+  try {
+    const { data } = await axios.get(`/api/profile/user/${id}`);
+    dispatch({ type: SINGLE_PROFILE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: SINGLE_PROFILE_FAIL,
       payload: {
         msg: error.response.statusText,
         status: error.response.status,
