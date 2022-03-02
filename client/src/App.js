@@ -11,6 +11,7 @@ import AddExperience from './components/dashboard/AddExperience';
 import AddEducation from './components/dashboard/AddEducation';
 import CreateProfile from './components/layout/CreateProfile';
 import Profiles from './components/profiles/Profiles';
+import Posts from './components/posts/Posts';
 import ViewProfile from './components/profiles/ViewProfile';
 import { loadUser } from './actions/userActions';
 import './App.css';
@@ -39,6 +40,7 @@ function App() {
             <Route path='add-experience' element={<AddExperience />} />
             <Route path='add-education' element={<AddEducation />} />
             <Route path='profiles' element={<Profiles />} />
+            <Route path='posts' element={<Posts />} />
             <Route path='profile/:id' element={<ViewProfile />} />
           </Routes>
         </section>

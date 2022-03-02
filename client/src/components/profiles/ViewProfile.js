@@ -32,66 +32,77 @@ function ViewProfile({ userProfile: { profile }, getProfileById }) {
             </p>
             <p>{location && <span>{location}</span>}</p>
             <div className='icons my-1'>
-              <Link
-                to={
+              <a
+                href={
+                  profile.hasOwnProperty('website') && profile.website
+                    ? profile.website
+                    : ''
+                }
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <i className='fas fa-globe fa-2x'></i>
+              </a>
+              <a
+                href={
                   profile.hasOwnProperty('social') &&
                   profile.social.hasOwnProperty('twitter')
-                    ? `/${profile.social.twitter}`
+                    ? profile.social.twitter
                     : ''
                 }
                 target='_blank'
                 rel='noopener noreferrer'
               >
                 <i className='fab fa-twitter fa-2x'></i>
-              </Link>
-              <Link
-                to={
+              </a>
+              <a
+                href={
                   profile.hasOwnProperty('social') &&
                   profile.social.hasOwnProperty('facebook')
-                    ? `/${profile.social.facebook}`
+                    ? profile.social.facebook
                     : ''
                 }
                 target='_blank'
                 rel='noopener noreferrer'
               >
                 <i className='fab fa-facebook fa-2x'></i>
-              </Link>
-              <Link
-                to={
+              </a>
+              <a
+                href={
                   profile.hasOwnProperty('social') &&
                   profile.social.hasOwnProperty('linkedin')
-                    ? `/${profile.social.linkedin}`
+                    ? profile.social.linkedin
                     : ''
                 }
                 target='_blank'
                 rel='noopener noreferrer'
               >
                 <i className='fab fa-linkedin fa-2x'></i>
-              </Link>
-              <Link
-                to={
+              </a>
+              <a
+                href={
                   profile.hasOwnProperty('social') &&
                   profile.social.hasOwnProperty('youtube')
-                    ? `/${profile.social.youtube}`
+                    ? profile.social.youtube
                     : ''
                 }
                 target='_blank'
                 rel='noopener noreferrer'
               >
                 <i className='fab fa-youtube fa-2x'></i>
-              </Link>
-              <Link
-                to={
+              </a>
+              <a
+                href={
                   profile.hasOwnProperty('social') &&
                   profile.social.hasOwnProperty('instagram')
-                    ? `/${profile.social.instagram}`
+                    ? profile.social.instagram
                     : ''
                 }
                 target='_blank'
                 rel='noopener noreferrer'
               >
                 <i className='fab fa-instagram fa-2x'></i>
-              </Link>
+              </a>
             </div>
           </div>
 

@@ -14,7 +14,7 @@ router.post(
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ errors: errors.array() });
     }
     try {
       const user = await User.findById(req.user.id).select('-password');
@@ -113,10 +113,10 @@ router.put('/like/:id', auth, async (req, res) => {
     post.likes.unshift({ user: req.user.id });
     await post.save();
 
-    res.json(post.likes);
+    return res.json(post.likes);
   } catch (error) {
     console.log(error.message);
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 });
 
@@ -140,7 +140,7 @@ router.put('/unlike/:id', auth, async (req, res) => {
     post.likes.splice(removeIndex, 1);
 
     await post.save();
-    res.json(post.likes);
+    return res.json(post.likes);
   } catch (error) {
     console.log(error.message);
     res.status(500).send('Server Error');
@@ -175,7 +175,7 @@ router.post(
       res.json(post.comments);
     } catch (error) {
       console.log(error.message);
-      return res.status(500).send('Server Error');
+      res.status(500).send('Server Error');
     }
   }
 );
@@ -208,7 +208,7 @@ router.delete('/comment/:id/:comment_id', auth, async (req, res) => {
       .indexOf(req.user.id);
     post.comments.splice(removeIndex, 1);
     await post.save();
-    res.json(post.comments);
+    return res.json(post.comments);
   } catch (error) {
     console.log(error.message);
     return res.status(500).send('Server Error');
