@@ -10,9 +10,11 @@ import EditProfile from './components/dashboard/EditProfile';
 import AddExperience from './components/dashboard/AddExperience';
 import AddEducation from './components/dashboard/AddEducation';
 import CreateProfile from './components/layout/CreateProfile';
+import NotFound from './components/layout/NotFound';
 import Profiles from './components/profiles/Profiles';
 import Posts from './components/posts/Posts';
 import ViewProfile from './components/profiles/ViewProfile';
+import ViewPost from './components/posts/ViewPost';
 import { loadUser } from './actions/userActions';
 import './App.css';
 
@@ -42,6 +44,7 @@ function App() {
             <Route path='profiles' element={<Profiles />} />
             <Route path='posts' element={<Posts />} />
             <Route path='profile/:id' element={<ViewProfile />} />
+            <Route path='posts/:id' element={<ViewPost />} />
           </Routes>
         </section>
       </Fragment>

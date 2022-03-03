@@ -13,6 +13,14 @@ import {
   DELETE_POST_SUCCESS,
   DELETE_POST_FAIL,
   DELETE_POST_RESET,
+  POST_DETAIL_SUCCESS,
+  POST_DETAIL_FAIL,
+  ADD_COMMENT_SUCCESS,
+  ADD_COMMENT_FAIL,
+  ADD_COMMENT_RESET,
+  DELETE_COMMENT_SUCCESS,
+  DELETE_COMMENT_FAIL,
+  DELETE_COMMENT_RESET,
 } from '../constants/postConstants';
 
 const postInitialState = {
@@ -73,7 +81,7 @@ export const postReducer = (state = postInitialState, action) => {
         loading: false,
         posts: state.posts.map((post) =>
           post._id === action.payload.id
-            ? { ...post, likes: action.payload }
+            ? { ...post, likes: action.payload.likes }
             : post
         ),
         unlike_success: true,
@@ -108,6 +116,65 @@ export const postReducer = (state = postInitialState, action) => {
         ...state,
         loading: false,
         delete_success: false,
+      };
+    case POST_DETAIL_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        post: action.payload,
+      };
+    case POST_DETAIL_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case ADD_COMMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post._id === action.payload.id
+            ? { ...post, comments: action.payload.comments }
+            : post
+        ),
+        comment_success: true,
+      };
+    case ADD_COMMENT_FAIL:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case ADD_COMMENT_RESET:
+      return {
+        ...state,
+        loading: false,
+        comment_success: false,
+      };
+
+    case DELETE_COMMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        posts: state.posts.map((post) =>
+          post._id === action.payload.id
+            ? { ...post, comments: action.payload.comments }
+            : post
+        ),
+        delComment_success: true,
+      };
+    case DELETE_COMMENT_FAIL:
+      return {
+        ...state,
+        laoding: false,
+        error: action.payload,
+      };
+    case DELETE_COMMENT_RESET:
+      return {
+        ...state,
+        loading: false,
+        delComment_success: false,
       };
     default:
       return state;

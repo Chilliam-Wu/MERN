@@ -181,14 +181,14 @@ function Posts({
                           : 0}
                       </span>
                     </button>
-                    <a href='post.html' className='btn btn-primary'>
+                    <Link to={`/posts/${post._id}`} className='btn btn-primary'>
                       Discussion{' '}
                       <span className='comment-count'>
-                        {post.comment && post.comment.length > 0
-                          ? post.comment.length
+                        {post.comments && post.comments.length > 0
+                          ? post.comments.length
                           : 0}
                       </span>
-                    </a>
+                    </Link>
                     {post.user === user._id && (
                       <button
                         type='button'
