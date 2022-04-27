@@ -1,4 +1,0 @@
-{
-    "mongoDBCloud": "mongodb+srv://chilliam:chilliam@merncloud.pr33c.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    "secretKey": "secretKey"
-}
